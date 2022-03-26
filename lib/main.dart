@@ -28,6 +28,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late TextEditingController _controller;
+
+  List myData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,12 +46,39 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[],
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 10),
+            TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Write TODO here',
+              ),
+            ),
+            SizedBox(height: 20),
+            Container(
+              height: MediaQuery.of(context).size.height -
+                  MediaQuery.of(context).size.height / 2,
+              child: ListView.builder(
+                itemBuilder: ((context, index) => Text(myData[index])),
+                itemCount: myData.length,
+              ),
+            )
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          print(_controller.value.text);
+          if (_controller.value.text != "") {
+            setState(() {
+              myData.add(_controller.value.text);
+            });
+            _controller.text = '';
+            FocusScope.of(context).requestFocus(new FocusNode());
+          }
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
